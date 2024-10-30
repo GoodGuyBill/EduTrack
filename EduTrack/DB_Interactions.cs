@@ -7,7 +7,6 @@ using SQLite;
 using System.IO;
 using EduTrak.DB_Models;
 using Microsoft.VisualBasic.FileIO;
-using static Android.Graphics.ImageDecoder;
 
 namespace EduTrak
 {

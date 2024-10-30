@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EduTrak.CourseDetailPage">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="10">
+                <Label Text="Course Detail" FontSize="Large" />
+                <Entry Placeholder="Course Name" x:Name="CourseNameEntry" />
+                <DatePicker x:Name="CourseStartDatePicker" />
+                <DatePicker x:Name="CourseEndDatePicker" />
+                <Picker x:Name="CourseStatusPicker">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>In Progress</x:String>
+                            <x:String>Completed</x:String>
+                            <x:String>Dropped</x:String>
+                            <x:String>Plan to take</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Entry Placeholder="Instructor Name" x:Name="InstructorNameEntry" />
+                <Entry Placeholder="Instructor Phone" x:Name="InstructorPhoneEntry" />
+                <Entry Placeholder="Instructor Email" x:Name="InstructorEmailEntry" />
+                <Editor Placeholder="Notes" x:Name="NotesEditor" AutoSize="TextChanges" />
+                <Button Text="Save" Clicked="OnSaveClicked" />
+                <Button Text="Delete" Clicked="OnDeleteClicked" />
+                <Button Text="Add New Assessment" Clicked="OnAddAssessmentClicked" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>    
+
+<!--The following is default code during project creation.-->
+<!--<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EduTrack.CourseDetailPage"
              Title="CourseDetailPage">
     <VerticalStackLayout>
@@ -9,4 +43,4 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
     </VerticalStackLayout>
-</ContentPage>
+</ContentPage>-->
