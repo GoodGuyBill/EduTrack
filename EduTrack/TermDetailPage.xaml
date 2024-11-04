@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="EduTrak.TermDetailPage">
+             x:Class="EduTrack.TermDetailPage"
+             Title="Term Course List">
     <ContentPage.Content>
         <StackLayout Padding="10">
-            <Label Text="Term Detail" FontSize="Large" />
-            <Entry Placeholder="Term Title" x:Name="TermTitleEntry" />
+            <!-- <Label Text="Term Detail" FontSize="Large" />  -->
+            <Entry x:Name="TitleName" Placeholder="Term Title" />
+            <!--<Entry Placeholder="Term Title" x:Name="TermTitleEntry" />  -->
             <DatePicker x:Name="StartDatePicker" />
             <DatePicker x:Name="EndDatePicker" />
             <Button Text="Save" Clicked="OnSaveClicked" />

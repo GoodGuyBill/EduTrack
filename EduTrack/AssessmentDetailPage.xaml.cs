@@ -1,6 +1,6 @@
-using EduTrak.DB_Models;
+using EduTrack.DB_Models;
 
-namespace EduTrak
+namespace EduTrack
 {
     public partial class AssessmentDetailPage : ContentPage
     {
@@ -11,7 +11,7 @@ namespace EduTrak
         {
             InitializeComponent();
             _courseId = courseId;
-            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EduTrak.db3");
+            string dbPath = AppConfig.DbPath;
             _dbInteractions = new DB_Interactions(dbPath);
         }
 

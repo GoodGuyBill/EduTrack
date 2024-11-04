@@ -1,5 +1,5 @@
-using EduTrak.DB_Models;
-namespace EduTrak;
+using EduTrack.DB_Models;
+namespace EduTrack;
 
 public partial class CourseDetailPage : ContentPage
 {
@@ -7,14 +7,47 @@ public partial class CourseDetailPage : ContentPage
     private readonly int _termId;
     private readonly int _courseId;
 
-    public CourseDetailPage(int termId, int courseId)
+
+    public CourseDetailPage(Term term)
     {
         InitializeComponent();
-        _termId = termId;
-        _courseId = courseId;
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EduTrak.db3");
+        _termId = term.TermId;
+        string dbPath = AppConfig.DbPath;
         _dbInteractions = new DB_Interactions(dbPath);
     }
+
+
+    public CourseDetailPage(Course selectedCourse)
+    {
+        InitializeComponent();
+        _termId = selectedCourse.TermId;
+        _courseId = selectedCourse.CourseId;
+        string dbPath = AppConfig.DbPath;
+        _dbInteractions = new DB_Interactions(dbPath);
+
+        if (selectedCourse != null)
+        {
+            CourseNameEntry.Text = selectedCourse.Name;
+            CourseStartDatePicker.Date = selectedCourse.StartDate;
+            CourseEndDatePicker.Date = selectedCourse.EndDate;
+            CourseStatusPicker.SelectedItem = selectedCourse.Status;
+            InstructorNameEntry.Text = selectedCourse.InstructorName;
+            InstructorPhoneEntry.Text = selectedCourse.InstructorPhone;
+            InstructorEmailEntry.Text = selectedCourse.InstructorEmail;
+            NotifyStartCheckBox.IsChecked = selectedCourse.NotifyStart;
+            NotifyEndCheckBox.IsChecked = selectedCourse.NotifyEnd;
+        }
+
+
+    }
+
+
+    
+
+
+
+
+
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
@@ -28,6 +61,11 @@ public partial class CourseDetailPage : ContentPage
             InstructorName = InstructorNameEntry.Text,
             InstructorPhone = InstructorPhoneEntry.Text,
             InstructorEmail = InstructorEmailEntry.Text,
+
+            NotifyStart = NotifyStartCheckBox.IsChecked,
+            NotifyEnd = NotifyEndCheckBox.IsChecked,
+
+
             Notes = NotesEditor.Text
         };
 

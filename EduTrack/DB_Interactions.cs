@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using SQLite;
 using System.IO;
-using EduTrak.DB_Models;
+using EduTrack.DB_Models;
 using Microsoft.VisualBasic.FileIO;
+using static SQLite.SQLite3;
 
-namespace EduTrak
+namespace EduTrack
 {
     internal class DB_Interactions
     {
@@ -24,11 +25,19 @@ namespace EduTrak
             _database.CreateTableAsync<Term>().Wait();
         }
 
-        public async Task InitializeData()
+        public async Task<int> InitializeData()
         {
-            await _database.DeleteAllAsync<Term>();
-            await _database.DeleteAllAsync<Course>();
-            await _database.DeleteAllAsync<Assessment>();
+            int term_result = await _database.DeleteAllAsync<Term>();
+            int course_result = await _database.DeleteAllAsync<Course>();
+            int assessment_result = await _database.DeleteAllAsync<Assessment>();
+            if ((term_result > 0) && (course_result > 0) && (assessment_result > 0))
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -63,39 +72,54 @@ namespace EduTrak
         //Save Term
         public async Task<int> SaveTerm(Term term)
         {
-            if (term.TermId == 0)
-            {
-                return await _database.InsertAsync(term);
-            }
-            else
-            {
-                return await _database.UpdateAsync(term);
+            System.Diagnostics.Debug.WriteLine($"******* TERM ******* SaveTerm: Name={term.Name}, TermId={term.TermId}, StartDate={{term.StartDate}}, EndDate={{term.EndDate}}\"); ");
+            if (term.TermId == 0) 
+            { 
+                var result = await _database.InsertAsync(term); 
+                System.Diagnostics.Debug.WriteLine($"******* TERM ******* Inserted Term: Name={term.Name}, TermId={term.TermId}, StartDate={term.StartDate}, EndDate={term.EndDate}"); 
+                return result; 
+            } 
+            else 
+            { 
+                var result = await _database.UpdateAsync(term); 
+                System.Diagnostics.Debug.WriteLine($"******* TERM ******* Updated Term: Name={term.Name}, TermId={term.TermId}, StartDate={{term.StartDate}}, EndDate={{term.EndDate}}\"); "); 
+                return result; 
             }
         }
 
         //Save Course
         public async Task<int> SaveCourse(Course course)
         {
-            if (course.CourseId == 0)
-            {
-                return await _database.InsertAsync(course);
-            }
-            else
-            {
-                return await _database.UpdateAsync(course);
+            System.Diagnostics.Debug.WriteLine($"******* COURSE ******* SaveCourse: Name={course.Name}, CourseId={course.CourseId}");
+            if (course.CourseId == 0) 
+            { 
+                var result = await _database.InsertAsync(course); 
+                System.Diagnostics.Debug.WriteLine($"******* COURSE ******* Inserted Course: Name={course.Name}, CourseId={course.CourseId}"); 
+                return result; 
+            } 
+            else 
+            { 
+                var result = await _database.UpdateAsync(course); 
+                System.Diagnostics.Debug.WriteLine($"******* COURSE ******* Updated Course: Name={course.Name}, CourseId={course.CourseId}"); 
+                return result; 
             }
         }
 
         //Save Assessment
         public async Task<int> SaveAssessment(Assessment assessment)
         {
+            System.Diagnostics.Debug.WriteLine($"******* Assessment ******* SaveAssessment: Name={assessment.Name}, AssessmentId={assessment.AssessmentId}");
             if (assessment.AssessmentId == 0)
             {
-                return await _database.InsertAsync(assessment);
+                var result = await _database.InsertAsync(assessment);
+                System.Diagnostics.Debug.WriteLine($"******* Assessment ******* Inserted Assessment: Name={assessment.Name}, AssessmentId={assessment.AssessmentId}");
+                return result;
             }
             else
             {
-                return await _database.UpdateAsync(assessment);
+                var result = await _database.UpdateAsync(assessment);
+                System.Diagnostics.Debug.WriteLine($"******* Assessment ******* Updated Assessment: Name={assessment.Name}, AssessmentId={assessment.AssessmentId}");
+                return result;
             }
         }
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

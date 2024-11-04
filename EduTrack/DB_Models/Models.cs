@@ -5,9 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EduTrak.DB_Models
+namespace EduTrack.DB_Models
 {
 
+    public static class AppConfig 
+    { 
+        public static string DbPath { get; set; } 
+    }
+    
     public class Term
     {
         [PrimaryKey, AutoIncrement]
@@ -31,6 +36,8 @@ namespace EduTrak.DB_Models
         public string InstructorEmail { get; set; } = string.Empty;
         public string InstructorPhone { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
+        public bool NotifyStart { get; set; } 
+        public bool NotifyEnd { get; set; }   
     }
 
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using EduTrack.DB_Models;
+using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace EduTrack
 {
@@ -7,17 +9,21 @@ namespace EduTrack
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "EduTrack.db");
+            AppConfig.DbPath = dbPath;
+            builder.Services.AddSingleton(dbPath);
+            builder.Services.AddSingleton<App>();
+            builder.Services.AddTransient<TermListPage>();
+
             builder
+                
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
-
-#if DEBUG
-    		builder.Logging.AddDebug();
-#endif
+                })
+                .UseLocalNotification();
 
             return builder.Build();
         }
