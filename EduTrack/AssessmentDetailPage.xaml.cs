@@ -6,14 +6,16 @@ namespace EduTrack
     {
         private readonly DB_Interactions _dbInteractions;
         private readonly int _courseId;
+        private Assessment _assessment;
 
-        public AssessmentDetailPage(int courseId) // Ensure this constructor exists
+        public AssessmentDetailPage(Assessment selectedAssessment) // Ensure this constructor exists
         {
             InitializeComponent();
-            _courseId = courseId;
+            _assessment = selectedAssessment;
             string dbPath = AppConfig.DbPath;
             _dbInteractions = new DB_Interactions(dbPath);
-        }
+
+    }
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {

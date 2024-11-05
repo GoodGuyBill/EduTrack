@@ -2,44 +2,102 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EduTrack.CourseDetailPage"
-             Title="Course Detail">
+             Title="EduTrack" >
     
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout Padding="10">
-                <Label Text="Course Detail" FontSize="Large" />
-                <Entry Placeholder="Course Name" x:Name="CourseNameEntry" />
-                <DatePicker x:Name="CourseStartDatePicker" />
-                <DatePicker x:Name="CourseEndDatePicker" />
-                <Picker x:Name="CourseStatusPicker">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>In Progress</x:String>
-                            <x:String>Completed</x:String>
-                            <x:String>Dropped</x:String>
-                            <x:String>Plan to take</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
-                <Entry Placeholder="Instructor Name" x:Name="InstructorNameEntry" />
-                <Entry Placeholder="Instructor Phone" x:Name="InstructorPhoneEntry" />
-                <Entry Placeholder="Instructor Email" x:Name="InstructorEmailEntry" />
+            <StackLayout Padding="10" Margin="10,-15,0,0">
+                <Label Text="Course Detail" FontSize="Large" Margin="0,0,0,10"/>
+                
+                <Label Text="Basic Course Information" VerticalOptions="Center" FontSize="Medium" Margin="0,0,0,0"/>
+                
+                <StackLayout Padding="10" Margin="10,-20,0,0">
+                    <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">
+                        <Label Text="Name:" VerticalOptions="Center" Margin="0,0,0,0" />
+                        <Entry Placeholder="Course Name" x:Name="CourseNameEntry" HorizontalOptions="FillAndExpand" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">
+                        <Label Text="Start/End Dates:" VerticalOptions="Center"  Margin="0,0,5,0" />
+                        <DatePicker x:Name="CourseStartDatePicker" HorizontalOptions="FillAndExpand"  />
+                        <Label Text="-" VerticalOptions="Center" />
+                        <DatePicker x:Name="CourseEndDatePicker" HorizontalOptions="FillAndExpand"  />
+                    </HorizontalStackLayout>
+                
+                    <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">
+                        <Label Text="Status:" VerticalOptions="Center"  Margin="0,0,5,0" />
+                        <Picker x:Name="CourseStatusPicker">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>In Progress</x:String>
+                                    <x:String>Completed</x:String>
+                                    <x:String>Dropped</x:String>
+                                    <x:String>Plan to take</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">
+                        <Label Text="Instructor:" VerticalOptions="Center"  Margin="0,0,5,0" />
+                        <Entry Placeholder="Instructor Name" x:Name="InstructorNameEntry" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">
+                        <Label Text="Instructor. Email:" VerticalOptions="Center"  Margin="0,0,5,0" />
+                        <Entry Placeholder="Instructor Email" x:Name="InstructorEmailEntry" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">
+                        <Label Text="Instructor. Phone:" VerticalOptions="Center"  Margin="0,0,5,0" />
+                        <Entry Placeholder="Instructor Phone" x:Name="InstructorPhoneEntry" />
+                    </HorizontalStackLayout>
 
-                <!-- Using StackLayout with CheckBox and Label -->
-                <StackLayout Orientation="Horizontal">
-                    <CheckBox x:Name="NotifyStartCheckBox" />
-                    <Label Text="Notify Start" VerticalOptions="Center" />
-                    <CheckBox x:Name="NotifyEndCheckBox" />
-                    <Label Text="Notify End" VerticalOptions="Center" />
+                    <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">
+                        <Label Text="Notify Start" VerticalOptions="Center" />
+                        <CheckBox x:Name="NotifyStartCheckBox" />
+                        <Label Text="Notify End" VerticalOptions="Center" />
+                        <CheckBox x:Name="NotifyEndCheckBox" />
+                    </HorizontalStackLayout>
+                    <Label Text="Notes: " VerticalOptions="Center" Margin="0,15,0,-10"/>
+                    <Editor Placeholder="Notes" x:Name="NotesEditor" AutoSize="TextChanges" Margin="0,0,0,-10" />
                 </StackLayout>
 
+                <Button Text="Share Notes" Clicked="OnShareNotesClicked" Margin="0,0,0,5" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175" />
+                
+                
+                <Label Text="Assessments Insformation" VerticalOptions="Center" FontSize="Medium" Margin="0,10,0,0"/>
+                <CollectionView x:Name="AssessmentsCollectionView" SelectionMode="None" HeightRequest="160" Margin="10,-5,0,0" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView SwipeStarted="OnSwipeStarted"
+                       SwipeEnded="OnSwipeEnded">
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Edit"
+                                   BackgroundColor="LightGreen"
+                                   CommandParameter="{Binding .}"
+                                   Clicked="OnEditAssessmentSwipe"/>
+                                        <SwipeItem Text="Delete"
+                                   BackgroundColor="Red"
+                                   CommandParameter="{Binding .}"
+                                   Clicked="OnDeleteAssessmentSwipe"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <StackLayout Padding="5" Orientation="Vertical" Spacing="3">
+                                    <Label Text="{Binding Name}" FontSize="16"/>
+                                    <StackLayout Orientation="Horizontal" Spacing="10">
+                                        <Label Text="{Binding StartDate, StringFormat='Start: {0:MM/dd/yyyy}'}" FontSize="14"/>
+                                        <Label Text="{Binding EndDate, StringFormat='End: {0:MM/dd/yyyy}'}" FontSize="14"/>
+                                        <Label Text="{Binding Type}" FontSize="14"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
 
 
-                <Editor Placeholder="Notes" x:Name="NotesEditor" AutoSize="TextChanges" />
-                <Button Text="Save" Clicked="OnSaveClicked" />
-                <Button Text="Delete" Clicked="OnDeleteClicked" />
-                <Button Text="Add New Assessment" Clicked="OnAddAssessmentClicked" />
+                <Button Text="Save" Clicked="OnSaveClicked" Margin="10,-25,10,10" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175" />
+                <Button Text="Delete" Clicked="OnDeleteClicked" Margin="10,3,10,10" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175" />
+                <Button Text="New Assessment" Clicked="OnAddAssessmentClicked" Margin="10,3,10,10" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

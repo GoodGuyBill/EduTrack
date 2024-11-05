@@ -1,29 +1,47 @@
 using EduTrack.DB_Models;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 namespace EduTrack;
 
 public partial class CourseDetailPage : ContentPage
 {
     private readonly DB_Interactions _dbInteractions;
+    private Course _course;
+    private Term _term;
+    private ObservableCollection<Assessment> _assessments;
+
+
+
     private readonly int _termId;
     private readonly int _courseId;
+    bool _didUserSwipe;
 
 
     public CourseDetailPage(Term term)
     {
         InitializeComponent();
-        _termId = term.TermId;
+        _term = term;
         string dbPath = AppConfig.DbPath;
         _dbInteractions = new DB_Interactions(dbPath);
-    }
+     }
 
+
+
+    
 
     public CourseDetailPage(Course selectedCourse)
     {
         InitializeComponent();
         _termId = selectedCourse.TermId;
         _courseId = selectedCourse.CourseId;
+        _course = selectedCourse;
+        _assessments = new ObservableCollection<Assessment>();
+        AssessmentsCollectionView.ItemsSource = _assessments;
+        
+        BindingContext = this;
         string dbPath = AppConfig.DbPath;
         _dbInteractions = new DB_Interactions(dbPath);
+        LoadAssessments();
 
         if (selectedCourse != null)
         {
@@ -36,53 +54,233 @@ public partial class CourseDetailPage : ContentPage
             InstructorEmailEntry.Text = selectedCourse.InstructorEmail;
             NotifyStartCheckBox.IsChecked = selectedCourse.NotifyStart;
             NotifyEndCheckBox.IsChecked = selectedCourse.NotifyEnd;
+            NotesEditor.Text = selectedCourse.Notes;
+        }
+        
+        // app is adding a new course and therefore need to set the datepickers to today.
+        if (selectedCourse.CourseId == 0)
+        {
+            CourseStartDatePicker.Date = DateTime.Today;
+            CourseEndDatePicker.Date = DateTime.Today;
         }
 
 
     }
 
 
-    
+    //private async void LoadAssessments()
+    //{
+    //    var assessments = await _dbInteractions.GetAssessments(_course.CourseId);
+    //    _assessments.Clear();
+    //    foreach (var assessment in assessments)
+    //    {
+    //        _assessments.Add(assessment);
+    //    }
+    //}
+
+    private async void LoadAssessments()
+    {
+        try
+        {
+            if (_dbInteractions == null) 
+            { 
+                Debug.WriteLine("Error: _dbInteractions is null"); return; 
+            }
+            
+            Debug.WriteLine("LoadAssessments: Before await");
+            var assessments = await _dbInteractions.GetAssessments(_course.CourseId);
+            Debug.WriteLine("LoadAssessments: After await");
+
+            if (assessments == null || assessments.Count == 0)
+            {
+                // Display an alert if no assessments are found
+                await DisplayAlert("No Assessments", "There are no assessments for this course.", "OK");
+                return;
+            }
+
+            _assessments.Clear();
+            foreach (var assessment in assessments)
+            {
+                _assessments.Add(assessment);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error: {ex.Message}");
+        }
+    }
 
 
+    private void OnSwipeStarted(object sender, SwipeStartedEventArgs e)
+    {
+        _didUserSwipe = true;
+    }
 
+    private void OnSwipeEnded(object sender, SwipeEndedEventArgs e)
+    {
+        _didUserSwipe = false;
+    }
 
+    private async void OnEditAssessmentSwipe(object sender, EventArgs e)
+    {
+        if (_didUserSwipe) return;
+
+        if (((SwipeItem)sender).CommandParameter is Assessment assessmentToEdit)
+        {
+            await Navigation.PushAsync(new AssessmentDetailPage(assessmentToEdit));
+        }
+    }
 
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
-        var course = new Course
+        if (!ValidateCourseData())
         {
-            TermId = _termId,
-            Name = CourseNameEntry.Text,
-            StartDate = CourseStartDatePicker.Date,
-            EndDate = CourseEndDatePicker.Date,
-            Status = CourseStatusPicker.SelectedItem.ToString() ?? string.Empty,
-            InstructorName = InstructorNameEntry.Text,
-            InstructorPhone = InstructorPhoneEntry.Text,
-            InstructorEmail = InstructorEmailEntry.Text,
+            return;
+        }
 
-            NotifyStart = NotifyStartCheckBox.IsChecked,
-            NotifyEnd = NotifyEndCheckBox.IsChecked,
+        if (_course == null)
+        {
+            _course = new Course
+            {
+                TermId = _term.TermId
+            };
+        }
+        _course.Name = CourseNameEntry.Text;
+        _course.StartDate = CourseStartDatePicker.Date;
+        _course.EndDate = CourseEndDatePicker.Date;
+        _course.Status = CourseStatusPicker.SelectedItem?.ToString();
+        _course.InstructorName = InstructorNameEntry.Text;
+        _course.InstructorPhone = InstructorPhoneEntry.Text;
+        _course.InstructorEmail = InstructorEmailEntry.Text;
+        _course.NotifyStart = NotifyStartCheckBox.IsChecked;
+        _course.NotifyEnd = NotifyEndCheckBox.IsChecked;
+        _course.Notes = NotesEditor.Text;
 
+        // Add prompt to confirm save here.
+        await _dbInteractions.SaveCourse(_course);
+        await DisplayAlert("Success", "The course was saved!", "OK");
 
-            Notes = NotesEditor.Text
-        };
+        //Update the TermCourseListPage data
+        if (Navigation.NavigationStack.LastOrDefault() is TermCourseListPage termCourseListPage)
+        {
+            termCourseListPage.LoadCourses();
+        }
 
-        await _dbInteractions.SaveCourse(course);
-        await Navigation.PopAsync();
+        //Go back to the TermsCourseListPage.
+        await Navigation.PopAsync(); 
     }
 
+    private async void OnShareNotesClicked(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(NotesEditor.Text))
+        {
+            await Share.RequestAsync(new ShareTextRequest
+            {
+                Text = NotesEditor.Text,
+                Title = "Share Course Notes"
+            });
+        }
+    }
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
-        // Confirm deletion dialog (optional)
-        var course = (Course)BindingContext;
-        await _dbInteractions.DeleteCourse(course);
-        await Navigation.PopAsync();
+        if (_course != null)
+        {
+            bool PermissionToDelete = await DisplayAlert("Confirm Delete", "Please confirm course deletion?", "Yes", "No");
+            if (PermissionToDelete)
+            {
+                await _dbInteractions.DeleteCourse(_course);
+
+                // update courses page to remove course from the list
+                if (Navigation.NavigationStack.LastOrDefault() is TermCourseListPage termCourseListPage)
+                {
+                    termCourseListPage.LoadCourses();
+                }
+
+                await DisplayAlert("Success", "Course deleted successfully!", "OK");
+                await Navigation.PopAsync();
+            }
+        }
     }
+
+    private async void OnDeleteAssessmentSwipe(object sender, EventArgs e)
+    {
+        if (_didUserSwipe) return;
+
+        if (((SwipeItem)sender).CommandParameter is Assessment assessmentToDelete)
+        {
+            bool confirmDelete = await DisplayAlert("Confirm Delete", $"Are you sure you want to delete {assessmentToDelete.Name}?", "Yes", "No");
+            if (confirmDelete)
+            {
+                await _dbInteractions.DeleteAssessment(assessmentToDelete);
+                _assessments.Remove(assessmentToDelete);
+                await DisplayAlert("Deleted", $"{assessmentToDelete.Name} has been deleted.", "OK");
+            }
+        }
+    }
+
 
     private async void OnAddAssessmentClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AssessmentDetailPage(_courseId));
+        //await Navigation.PushAsync(new AssessmentDetailPage(_courseId));
     }
+
+    private bool ValidateCourseData()
+    {
+        
+        if (string.IsNullOrWhiteSpace(CourseNameEntry.Text))
+        {
+            DisplayAlert("Validation Error", "A course name is required.", "OK");
+            return false;
+        }
+
+        
+        if (string.IsNullOrWhiteSpace(CourseStatusPicker.SelectedItem?.ToString()))
+        {
+            DisplayAlert("Validation Error", "A course status is required.", "OK");
+            return false;
+        }
+
+        
+        if (string.IsNullOrWhiteSpace(InstructorNameEntry.Text))
+        {
+            DisplayAlert("Validation Error", "The instructor's name is required.", "OK");
+            return false;
+        }
+
+        
+        if (string.IsNullOrWhiteSpace(InstructorPhoneEntry.Text))
+        {
+            DisplayAlert("Validation Error", "The instructor's phone number is required.", "OK");
+            return false;
+        }
+
+        
+        if (string.IsNullOrWhiteSpace(InstructorEmailEntry.Text))
+        {
+            DisplayAlert("Validation Error", "The instructor's email address is required.", "OK");
+            return false;
+        }
+
+        
+        if (CourseStartDatePicker.Date >= CourseEndDatePicker.Date)
+        {
+            DisplayAlert("Validation Error", "The course's start date must be before the end date.", "OK");
+            return false;
+        }
+
+        return true; // If code gets to this point, no validation issues were identified.
+    }
+
+
+
+
+
+
+
 }
+
+
+
+
+
