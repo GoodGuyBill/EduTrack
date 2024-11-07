@@ -14,12 +14,6 @@ public partial class CourseDetailPage : ContentPage
     private readonly int _courseId;
     bool _didUserSwipe;
 
-    //private ObservableCollection<Assessment> _assessments; 
-    //public ObservableCollection<Assessment> Assessments 
-    //{ 
-    //    get { return _assessments; } 
-    //    set { _assessments = value; OnPropertyChanged(); } 
-    //}
 
     //public CourseDetailPage(Term term)
     //{
@@ -30,28 +24,22 @@ public partial class CourseDetailPage : ContentPage
     // }
 
 
-
+    
 
 
     public CourseDetailPage(Course selectedCourse)
     {
         InitializeComponent();
-
         _termId = selectedCourse.TermId;
         _courseId = selectedCourse.CourseId;
         _course = selectedCourse;
         _assessments = new ObservableCollection<Assessment>();
         AssessmentsCollectionView.ItemsSource = _assessments;
 
+        BindingContext = this;
         string dbPath = AppConfig.DbPath;
         _dbInteractions = new DB_Interactions(dbPath);
-
-        BindingContext = this;
-
-        //Assessments = new ObservableCollection<Assessment>();
         LoadAssessments();
-
-
 
         if (selectedCourse != null)
         {
@@ -78,11 +66,6 @@ public partial class CourseDetailPage : ContentPage
     }
 
 
-    //public async Task NavigateToAssessmentDetailPage(Assessment selectedAssessment)
-    //{
-    //    var assessmentDetailPage = new AssessmentDetailPage(selectedAssessment, _assessments, this); // Pass the ObservableCollection
-    //    await Navigation.PushAsync(assessmentDetailPage);
-    //}
 
 
     protected override void OnAppearing()
@@ -105,17 +88,14 @@ public partial class CourseDetailPage : ContentPage
             var assessments = await _dbInteractions.GetAssessments(_course.CourseId);
             Debug.WriteLine("LoadAssessments: After await");
 
-            _assessments.Clear();
             if (assessments == null || assessments.Count == 0)
             {
                 // Display an alert if no assessments are found
-                Debug.WriteLine("No assessments found");
                 await DisplayAlert("No Assessments", "There are no assessments for this course.", "OK");
                 return;
             }
 
-            Debug.WriteLine("Clearing _assessments collection");
-            
+            _assessments.Clear();
             foreach (var assessment in assessments)
             {
                 _assessments.Add(assessment);

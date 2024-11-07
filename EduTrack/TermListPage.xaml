@@ -17,11 +17,11 @@
                                    SwipeEnded="OnSwipeEnded">
                             <SwipeView.RightItems>
                                 <SwipeItem Text="Edit" 
-                                       BackgroundColor="LightGreen" 
+                                       BackgroundColor="MediumSeaGreen" 
                                        CommandParameter="{Binding .}"
                                        Clicked="OnEditTermClicked" />
                                 <SwipeItem Text="Delete" 
-                                       BackgroundColor="Red" 
+                                       BackgroundColor="Crimson"
                                        CommandParameter="{Binding .}"
                                        Clicked="OnDeleteTermClicked" />
                             </SwipeView.RightItems>

@@ -6,19 +6,41 @@
     <ContentPage.Content>
         <StackLayout Padding="10">
             <Label Text="Assessment Detail" FontSize="Large" />
-            <Entry Placeholder="Assessment Name" x:Name="AssessmentNameEntry" />
-            <DatePicker x:Name="AssessmentStartDatePicker" />
-            <DatePicker x:Name="AssessmentEndDatePicker" />
-            <Picker x:Name="AssessmentTypePicker">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Performance</x:String>
-                        <x:String>Objective</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
-            <Button Text="Save" Clicked="OnSaveClicked" />
-            <Button Text="Delete" Clicked="OnDeleteClicked" />
+            <HorizontalStackLayout Padding="0" Spacing="0" Margin="15,0,0,10">
+                <Label Text="Name:" VerticalOptions="Center" Margin="0,0,0,0" />
+                <Entry x:Name="AssessmentNameEntry" HorizontalOptions="FillAndExpand" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,10">
+                <Label Text="Start/End Dates:" VerticalOptions="Center"  Margin="15,0,5,0" />
+                <DatePicker x:Name="AssessmentStartDatePicker" HorizontalOptions="FillAndExpand"  />
+                <Label Text="-" VerticalOptions="Center" />
+                <DatePicker x:Name="AssessmentEndDatePicker" HorizontalOptions="FillAndExpand"  />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,10">
+                <Label Text="Type (Picker): " VerticalOptions="Center" Margin="15,0,0,0" />
+                <Picker x:Name="AssessmentTypePicker">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Performance</x:String>
+                            <x:String>Objective</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </HorizontalStackLayout>    
+
+            <HorizontalStackLayout Padding="0" Spacing="0" Margin="15,0,0,15">
+                <Label Text="Notify Start" VerticalOptions="Center" />
+                <CheckBox x:Name="AssessmentNotifyStartCheckBox" />
+                <Label Text="Notify End" VerticalOptions="Center" />
+                <CheckBox x:Name="AssessmentNotifyEndCheckBox" />
+            </HorizontalStackLayout>
+
+
+
+            <Button Text="Save" Clicked="OnSaveClicked" HorizontalOptions="Center" Margin="0,15,0,15" HeightRequest="40" WidthRequest="175"/>
+            <Button Text="Delete" Clicked="OnDeleteClicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

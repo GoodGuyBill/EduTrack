@@ -71,11 +71,11 @@
                                 <SwipeView.RightItems>
                                     <SwipeItems>
                                         <SwipeItem Text="Edit"
-                                           BackgroundColor="MediumSeaGreen" 
+                                           BackgroundColor="LightGreen"
                                            CommandParameter="{Binding .}"
                                            Clicked="OnEditAssessmentSwipe"/>
                                         <SwipeItem Text="Delete"
-                                           BackgroundColor="Crimson"
+                                           BackgroundColor="Red"
                                            CommandParameter="{Binding .}"
                                            Clicked="OnDeleteAssessmentSwipe"/>
                                     </SwipeItems>
