@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Plugin.LocalNotification;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
+using System.Text;
 //using Android.App;
 //using static Android.Util.EventLogTags;
 //using static Android.InputMethodServices.Keyboard;
@@ -469,7 +470,38 @@ public partial class CourseDetailPage : ContentPage
         }
     }
 
-}
+    private void HandlePhoneInput(object sender, TextChangedEventArgs e)
+    {
+        var entry = sender as Entry;
+        var phoneNumber = InstructorPhoneInput.Text;
+        
+        // Remove non-numeric characters
+        var cleaned = new StringBuilder(); 
+        foreach (var c in phoneNumber) 
+        { 
+            if (char.IsDigit(c)) cleaned.Append(c); 
+        } 
+        
+        // Format the phone number
+        if (cleaned.Length > 0) 
+        { 
+            if (cleaned.Length > 3)
+                cleaned.Insert(3, ") ");
+            if (cleaned.Length > 8) cleaned.Insert(8, "-");
+                cleaned.Insert(0, "("); 
+        }
+
+        // Update the entry text and position the cursor at the end
+        InstructorPhoneInput.Text = cleaned.ToString();
+        InstructorPhoneInput.CursorPosition = InstructorPhoneInput.Text.Length;
+    }
+
+
+
+
+
+}   
+    
 
 
 

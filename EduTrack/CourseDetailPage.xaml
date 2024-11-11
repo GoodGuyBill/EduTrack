@@ -22,10 +22,12 @@
                         <DatePicker x:Name="CourseStartDatePicker" HorizontalOptions="FillAndExpand"  />
                         <Label Text="-" VerticalOptions="Center" />
                         <DatePicker x:Name="CourseEndDatePicker" HorizontalOptions="FillAndExpand"  />
+                        <Label Text="(Pickers)" FontSize="Micro" Margin="0,14,0,0"/>
                     </HorizontalStackLayout>
                 
                     <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">  <!-- Status picker-->
-                        <Label Text="Status (Picker):" VerticalOptions="Center"  Margin="0,0,5,0" />
+                        <Label Text="Status:" VerticalOptions="Center"  Margin="0,0,5,0" />
+                        <Label Text="(Picker)" FontSize="Micro" Margin="0,15,0,0"  />
                         <Picker x:Name="CourseStatusPicker">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
@@ -47,7 +49,7 @@
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">      <!-- Instructor Phone-->   
                         <Label Text="Instructor. Phone:" VerticalOptions="Center"  Margin="0,0,5,0" />
-                        <Entry Placeholder="Instructor Phone" x:Name="InstructorPhoneInput" />
+                        <Entry Placeholder="Instructor Phone" x:Name="InstructorPhoneInput" Keyboard="Numeric" TextChanged="HandlePhoneInput"/>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,-15">    <!-- Notification checkboxes-->   

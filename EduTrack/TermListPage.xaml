@@ -4,7 +4,8 @@
              x:Class="EduTrack.TermListPage"
              Title="EduTrack">
     <ContentPage.Content>
-        <StackLayout Padding="10">
+        <ScrollView>
+            <StackLayout Padding="10">
             <Label Text="Term List" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" Margin="0, 0, 0, 10"/>
             <CollectionView x:Name="TermsListView"
                             SelectionMode="Single"  
@@ -48,5 +49,6 @@
             <Button Text="Add New Term" Clicked="HandleAddTerm_Clicked" Margin="0,10,0,0" HeightRequest="40" WidthRequest="150"/>
             <!-- ==============================================================================================-->
         </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

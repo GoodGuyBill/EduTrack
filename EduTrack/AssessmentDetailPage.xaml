@@ -37,9 +37,6 @@
                 <Label Text="Notify End" VerticalOptions="Center" />
                 <CheckBox x:Name="AssessmentNotifyEndCheckBox" />
             </HorizontalStackLayout>
-
-
-
             <Button Text="Save" Clicked="HandleSave_Clicked" HorizontalOptions="Center" Margin="0,15,0,15" HeightRequest="40" WidthRequest="175"/>
             <Button Text="Delete" Clicked="HandleDelete_Clicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175"/>
         </StackLayout>

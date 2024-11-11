@@ -1,6 +1,7 @@
 ﻿using Plugin.LocalNotification;
 using Plugin.LocalNotification.EventArgs;
 using EduTrack.DB_Models;
+//using static Android.Graphics.ImageDecoder;
 
 namespace EduTrack
 {
@@ -32,6 +33,7 @@ namespace EduTrack
             await LoadSampleData(dbInteractions);              // I could never get this to work!
         }
 
+
         private async Task LoadSampleData(DB_Interactions dbInteractions)
         {
             // Initialize data (clears existing data)
@@ -44,58 +46,7 @@ namespace EduTrack
                    StartDate = DateTime.Now.AddDays(5),
                    EndDate = DateTime.Now.AddMonths(3)
                };
-            int term_result = await dbInteractions.SaveTerm(sampleTerm);
-
-            // initialize term data to test the maximum limit of 6 terms
-            // Define a list of terms
-            //var terms = new List<Term>
-            //{
-            //    new Term
-            //    {
-            //        Name = "2-Spring 2024",
-            //        StartDate = DateTime.Now.AddDays(5),
-            //        EndDate = DateTime.Now.AddMonths(3)
-            //    },
-            //    new Term
-            //    {
-            //        Name = "3-Summer 2024",
-            //        StartDate = DateTime.Now.AddMonths(4),
-            //        EndDate = DateTime.Now.AddMonths(6)
-            //    },
-            //    new Term
-            //    {
-            //        Name = "4-Fall 2024",
-            //        StartDate = DateTime.Now.AddMonths(7),
-            //        EndDate = DateTime.Now.AddMonths(9)
-            //    },
-            //    new Term
-            //    {
-            //        Name = "5-Winter 2024",
-            //        StartDate = DateTime.Now.AddMonths(10),
-            //        EndDate = DateTime.Now.AddMonths(12)
-            //    },
-            //    new Term
-            //    {
-            //        Name = "6-Spring 2025",
-            //        StartDate = DateTime.Now.AddMonths(13),
-            //        EndDate = DateTime.Now.AddMonths(15)
-            //    }
-            //};
-
-            //// Iterate over each term and save it to the database
-            //term_result = 0;
-            //foreach (var term in terms)
-            //{
-            //    term_result = await dbInteractions.SaveTerm(term);
-            //    if (term_result > 0)
-            //    {
-            //        Console.WriteLine($"Term '{term.Name}' saved successfully.");
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine($"Failed to save term '{term.Name}'.");
-            //    }
-            //}
+            int term_result = await dbInteractions.SaveTerm(sampleTerm);            
 
             var sampleCourse = new Course
             {
@@ -112,6 +63,7 @@ namespace EduTrack
                 NotifyEnd = true
             };
             int course_result = await dbInteractions.SaveCourse(sampleCourse);
+
 
             var sampleAssessment1 = new Assessment
             {

@@ -43,11 +43,11 @@ namespace EduTrack
             //Validations: 
             //#1: Ensure no more than 6 terms exist
             existingTerms = await _dbInteractions.GetTerms();
-            if (existingTerms.Count >= 6)
-            {
-                await DisplayAlert("Validation Error", "A limit of six terms is already reached. You cannot add another term.", "OK");
-                return;
-            }
+            //if (existingTerms.Count >= 6)
+            //{
+            //    await DisplayAlert("Validation Error", "A limit of six terms is already reached. You cannot add another term.", "OK");
+            //    return;
+            //}
 
             //  #1: Ensure start-date is before end-date?
             if (StartDatePicker.Date > EndDatePicker.Date)
