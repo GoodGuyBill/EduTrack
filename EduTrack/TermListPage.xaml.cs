@@ -8,7 +8,9 @@ namespace EduTrack
     {
         private readonly DB_Interactions _dbInteractions;
         private ObservableCollection<Term> _terms;
-        private bool _didUserSwipe = false;
+
+        private bool _didUserSwipe = false;   // used to determine if user right-swipped term record on term list.
+
 
         public TermListPage()
         {
@@ -20,7 +22,7 @@ namespace EduTrack
             LoadTerms();
         }
 
-        protected override void OnAppearing()
+        protected override void OnAppearing()   //loads term list data at each 'landing' on the TermListPage.
         {
             base.OnAppearing();
             LoadTerms();
@@ -31,30 +33,20 @@ namespace EduTrack
             var terms = await _dbInteractions.GetTerms();
             System.Diagnostics.Debug.WriteLine("********* LOAD TERMS ********* Terms Retrieved Post-Insertion:");
 
-            _terms.Clear();
-            foreach (var term in terms)
+            _terms.Clear(); 
+            foreach (var term in terms) 
             {
-                System.Diagnostics.Debug.WriteLine($"Retrieved Term: Name={term.Name}, StartDate={term.StartDate}, EndDate={term.EndDate}");
+                System.Diagnostics.Debug.WriteLine($"Retrieved Term: ID={term.TermId}, Name={term.Name}, StartDate={term.StartDate}, EndDate={term.EndDate}");
                 _terms.Add(term);
-                //await DisplayAlert("Term Details", $"Name: {term.Name}\nStart Date: {term.StartDate}\nEnd Date: {term.EndDate}", "OK");
-            }
-            
+            }            
         }
 
-        private async void OnAddTermClicked(object sender, EventArgs e)
+        private async void HandleTermSelection(object sender, SelectionChangedEventArgs e)
         {
-            var termDetailPage = new TermDetailPage();
-            await Navigation.PushAsync(termDetailPage);
-        }
-
-        private async void OnTermSelected(object sender, SelectionChangedEventArgs e)
-        {
-
             if (_didUserSwipe)
             {
-                //EDIT swiping now works. Ironed out bugs 
-                _didUserSwipe = false; // Reset swiping
-                TermsListView.SelectedItem = null; // Deselect
+                _didUserSwipe = false; 
+                TermsListView.SelectedItem = null; 
                 return;
             }
 
@@ -66,17 +58,23 @@ namespace EduTrack
             }
         }
 
-        private void OnSwipeStarted(object sender, SwipeStartedEventArgs e)
+        private void HandleSwipeStarted(object sender, SwipeStartedEventArgs e)
         {
             _didUserSwipe = true;
         }
 
-        private void OnSwipeEnded(object sender, SwipeEndedEventArgs e)
+        private void HandleSwipeEnded(object sender, SwipeEndedEventArgs e)
         {
-            _didUserSwipe = false; // Reset swiping
+            _didUserSwipe = false;
         }
 
-        private async void OnEditTermClicked(object sender, EventArgs e)
+        private async void HandleAddTerm_Clicked(object sender, EventArgs e)
+        {
+            var termDetailPage = new TermDetailPage();
+            await Navigation.PushAsync(termDetailPage);
+        }
+
+        private async void HandleEditTerm_Swiped(object sender, EventArgs e)
         {
             if (((SwipeItem)sender).CommandParameter is Term selectedTerm)
             {
@@ -85,21 +83,27 @@ namespace EduTrack
             }
         }
 
-        private async void OnDeleteTermClicked(object sender, EventArgs e)
+        private async void HandleDeleteTerm_Swiped(object sender, EventArgs e)
         {
             if (((SwipeItem)sender).CommandParameter is Term selectedTerm)
             {
-                bool confirmDelete = await DisplayAlert("Confirm Delete", $"Are you sure you want to delete the term '{selectedTerm.Name}'?", "Yes", "No");
+                bool confirmDelete = await DisplayAlert("Confirm Delete", $"Please confirm the '{selectedTerm.Name}'term deletion", "Yes", "No");
                 if (confirmDelete)
                 {
+                    // The section gets a list of courses associated with the term
+                    // and deletes the courses before deleting the term. Otherwise,
+                    // in the real world, there would be numerous orphaned assessments.
+                    List<Course> courses = await _dbInteractions.GetCoursesInTerm(selectedTerm.TermId);
+
+                    foreach (var course in courses)
+                    {
+                        await _dbInteractions.DeleteCourse(course);
+                    }
+
                     await _dbInteractions.DeleteTerm(selectedTerm);
                     LoadTerms();
                 }
             }
-
-
-
-
         }
     }
 }

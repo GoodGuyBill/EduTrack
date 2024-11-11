@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="EduTrack.TermCourseListPage"
-             Title="EduTrack">
-    
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="EduTrack.TermCourseListPage"
+    Title="EduTrack">
     <ContentPage.Content>
-        <StackLayout Padding="10">
+        <VerticalStackLayout Padding="10">
             <Label Text="Term Course List" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" Margin="0, 0, 0, 10"/>
-            <CollectionView x:Name="CollectionCourseView"
-                      SelectionMode="Single"
-                      SelectionChanged="OnCourseSelected">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <!-- SwipeView markup below enables the right-to-left swiping of individual terms
-                             to edit or delete it.
-                        -->
-                        <SwipeView SwipeStarted="OnSwipeStarted"
-                                   SwipeEnded="OnSwipeEnded">
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="Edit"
-                                               BackgroundColor="MediumSeaGreen" 
-                                               CommandParameter="{Binding .}"
-                                               Clicked="OnEditCourseSwipe"/>
-                                    <SwipeItem Text="Delete"
-                                               BackgroundColor="Crimson"
-                                               CommandParameter="{Binding .}"
-                                               Clicked="OnDeleteCourseSwipe"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <!-- ======================================================================= -->
-                            
-                            <!-- Course Grid -->
-                            <Grid Padding="10" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
-                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" FontSize="18" FontAttributes="Bold"/>
-                                <Label Grid.Row="1" Grid.Column="0" Text="{Binding StartDate, StringFormat='Start: {0:MM/dd/yyyy}'}"/>
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding EndDate, StringFormat='End: {0:MM/dd/yyyy}'}"/>
-                            </Grid>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <Label Text="Swipe To Edit / Delete" FontSize="12" FontAttributes="Bold"  Margin="10, 3, 10, 10"/>
-            <Button Text="Add Course" Clicked="OnAddCourseClicked"  HeightRequest="40" WidthRequest="150" />
-        </StackLayout>
+            <ContentView>
+                <CollectionView x:Name="CollectionCourseView"
+                            SelectionMode="Single"
+                            SelectionChanged="HandleCourse_Selected">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView SwipeStarted="HandleSwipe_Started"
+                                       SwipeEnded="HandleSwipe_Ended">
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Edit"
+                                                BackgroundColor="MediumSeaGreen" 
+                                                CommandParameter="{Binding .}"
+                                                Clicked="HandleEditCourse_Swipe"/>
+                                        <SwipeItem Text="Delete"
+                                                BackgroundColor="Crimson"
+                                                CommandParameter="{Binding .}"
+                                                Clicked="HandleDeleteCourse_Swipe"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <StackLayout Padding="10">
+                                    <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold"/>
+                                    <HorizontalStackLayout>
+                                        <Label Text="{Binding StartDate, StringFormat='Start: {0:MM/dd/yyyy}'}"/>
+                                        <Label Text="{Binding EndDate, StringFormat='End: {0:MM/dd/yyyy}'}"/>
+                                    </HorizontalStackLayout>
+                                </StackLayout>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ContentView>
+            <Label Text="Swipe To Edit / Delete" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"  Margin="10, 13, 10, 10"/>
+            <Button Text="Add Course" Clicked="HandleAddCourse_Clicked"  HeightRequest="40" WidthRequest="150" Margin="0,15,0,0" />
+        </VerticalStackLayout>
     </ContentPage.Content>
 </ContentPage>

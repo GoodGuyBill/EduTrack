@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace EduTrack.DB_Models
 {
 
-    public static class AppConfig 
+    public static class AppConfig //used as a global variable that holds the database path.
     { 
         public static string DbPath { get; set; } 
     }

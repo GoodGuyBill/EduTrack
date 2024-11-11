@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="EduTrack.TermDetailPage"
-             Title="EduTrack">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="EduTrack.TermDetailPage"
+    Title="EduTrack">
     <ContentPage.Content>
-        <StackLayout Padding="10">
-            <Label Text="Term Detail" FontSize="Large" />
-            <Entry x:Name="TitleName" Placeholder="Term Title" />
-            <!--<Entry Placeholder="Term Title" x:Name="TermTitleEntry" />  -->
-            <DatePicker x:Name="StartDatePicker" />
-            <DatePicker x:Name="EndDatePicker" />
-            <Button Text="Save" Clicked="OnSaveClicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="150"/>
-            <Button Text="Delete" Clicked="OnDeleteClicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="150"/>
-        </StackLayout>
+        <FlexLayout Padding="10" Direction="Column">
+            <Label Text="Term Detail" FontSize="Large" HorizontalOptions="Center"/>
+            <ContentView Margin="15,0,0,0">
+                <Entry x:Name="TermName" Placeholder="Term Name"/>
+            </ContentView>
+            <ContentView Margin="15,0,0,0">
+                <DatePicker x:Name="StartDatePicker"/>
+            </ContentView>
+            <ContentView Margin="15,0,0,0">
+                <DatePicker x:Name="EndDatePicker"/>
+            </ContentView>
+            <ContentView Margin="0,20,0,15">
+                <Button Text="Save" Clicked="HandleTermSave_Clicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="150"/>
+            </ContentView>
+            <ContentView Margin="0,0,0,15">
+                <Button Text="Delete" Clicked="HandleTermDelete_Clicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="150"/>
+            </ContentView>
+        </FlexLayout>
     </ContentPage.Content>
 </ContentPage>

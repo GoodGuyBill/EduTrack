@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="EduTrack.AssessmentDetailPage"
-             Title="EduTrack">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="EduTrack.AssessmentDetailPage"
+    Title="EduTrack">
     <ContentPage.Content>
         <StackLayout Padding="10">
             <Label Text="Assessment Detail" FontSize="Large" />
             <HorizontalStackLayout Padding="0" Spacing="0" Margin="15,0,0,10">
                 <Label Text="Name:" VerticalOptions="Center" Margin="0,0,0,0" />
-                <Entry x:Name="AssessmentNameEntry" HorizontalOptions="FillAndExpand" />
+                <Entry x:Name="AssessmentNameInput" HorizontalOptions="FillAndExpand" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0" Spacing="0" Margin="0,0,0,10">
@@ -39,8 +40,8 @@
 
 
 
-            <Button Text="Save" Clicked="OnSaveClicked" HorizontalOptions="Center" Margin="0,15,0,15" HeightRequest="40" WidthRequest="175"/>
-            <Button Text="Delete" Clicked="OnDeleteClicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175"/>
+            <Button Text="Save" Clicked="HandleSave_Clicked" HorizontalOptions="Center" Margin="0,15,0,15" HeightRequest="40" WidthRequest="175"/>
+            <Button Text="Delete" Clicked="HandleDelete_Clicked" HorizontalOptions="Center" HeightRequest="40" WidthRequest="175"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

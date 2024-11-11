@@ -16,7 +16,10 @@ namespace EduTrack
         private readonly SQLiteAsyncConnection _database;
 
 
-        //+++++++++++++++++++Database operations+++++++++++++++
+        //++++++++++Initial Database operations+++++++++++++++
+        //On execution, the app does the following:
+        //      1. Creates the term, course and assessment database tables (if they don't exist).
+        //      2. deletes all data from the tables. 
         public DB_Interactions(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
@@ -25,7 +28,7 @@ namespace EduTrack
             _database.CreateTableAsync<Term>().Wait();
         }
 
-        public async Task<int> InitializeData()
+            public async Task<int> InitializeData()
         {
             int term_result = await _database.DeleteAllAsync<Term>();
             int course_result = await _database.DeleteAllAsync<Course>();

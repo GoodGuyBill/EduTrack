@@ -7,43 +7,95 @@ namespace EduTrack
     public partial class App : Application
     {
         public static string DatabasePath { get; private set; }
+        private int term_result = 0;
 
         public App(string dbPath)
         {
             InitializeComponent();
-
-            // Set the database path
             DatabasePath = dbPath;   // dbPath is defined in the MauiProgram.cs page.
+            var dbInteractions = new DB_Interactions(DatabasePath); // Initialize database interactions
+            MainPage = new NavigationPage(new TermListPage());   // Set the main page to TermListPage (allows navigation features).
 
-            // Initialize database interactions
-            var dbInteractions = new DB_Interactions(DatabasePath);
+            //LoadSampleData(dbInteractions);
+            // for 3 days, I attempted to run this asynchronously (i.e. calling "await LoadSampleData(dbInteractions);"
+            // in a seperate async method. I just could not get it working. So I learned how to run an asynchronous
+            //synchrononously.
+            Task.Run(() => LoadSampleData(dbInteractions)).Wait();  // Load sample data
 
-            // Load sample data
-            Task.Run(() => LoadSampleDataAsync(dbInteractions)).Wait();
-
-            // Set the main page to TermListPage
-            MainPage = new NavigationPage(new TermListPage());
-
-            // Request notification permission
-            LocalNotificationCenter.Current.RequestNotificationPermission();
-
-            // Handle notification action tapped
-            LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
+            LocalNotificationCenter.Current.RequestNotificationPermission();  // Request notification permission
+            LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;  // Handle notification action tapped
         }
 
-        private async Task LoadSampleDataAsync(DB_Interactions dbInteractions)
+        private async Task InitializeApp(string dbPath)  // not needed be remains to work on later.
+        {            
+            var dbInteractions = new DB_Interactions(dbPath);
+            await LoadSampleData(dbInteractions);              // I could never get this to work!
+        }
+
+        private async Task LoadSampleData(DB_Interactions dbInteractions)
         {
             // Initialize data (clears existing data)
             int initialize_result = await dbInteractions.InitializeData();
 
-            // Load your initial sample data
+            //Load your initial sample data
             var sampleTerm = new Term
-            {
-                Name = "Spring 2024",
-                StartDate = DateTime.Now.AddDays(5),
-                EndDate = DateTime.Now.AddMonths(3)
-            };
+               {
+                   Name = "Spring 2024",
+                   StartDate = DateTime.Now.AddDays(5),
+                   EndDate = DateTime.Now.AddMonths(3)
+               };
             int term_result = await dbInteractions.SaveTerm(sampleTerm);
+
+            // initialize term data to test the maximum limit of 6 terms
+            // Define a list of terms
+            //var terms = new List<Term>
+            //{
+            //    new Term
+            //    {
+            //        Name = "2-Spring 2024",
+            //        StartDate = DateTime.Now.AddDays(5),
+            //        EndDate = DateTime.Now.AddMonths(3)
+            //    },
+            //    new Term
+            //    {
+            //        Name = "3-Summer 2024",
+            //        StartDate = DateTime.Now.AddMonths(4),
+            //        EndDate = DateTime.Now.AddMonths(6)
+            //    },
+            //    new Term
+            //    {
+            //        Name = "4-Fall 2024",
+            //        StartDate = DateTime.Now.AddMonths(7),
+            //        EndDate = DateTime.Now.AddMonths(9)
+            //    },
+            //    new Term
+            //    {
+            //        Name = "5-Winter 2024",
+            //        StartDate = DateTime.Now.AddMonths(10),
+            //        EndDate = DateTime.Now.AddMonths(12)
+            //    },
+            //    new Term
+            //    {
+            //        Name = "6-Spring 2025",
+            //        StartDate = DateTime.Now.AddMonths(13),
+            //        EndDate = DateTime.Now.AddMonths(15)
+            //    }
+            //};
+
+            //// Iterate over each term and save it to the database
+            //term_result = 0;
+            //foreach (var term in terms)
+            //{
+            //    term_result = await dbInteractions.SaveTerm(term);
+            //    if (term_result > 0)
+            //    {
+            //        Console.WriteLine($"Term '{term.Name}' saved successfully.");
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Failed to save term '{term.Name}'.");
+            //    }
+            //}
 
             var sampleCourse = new Course
             {
