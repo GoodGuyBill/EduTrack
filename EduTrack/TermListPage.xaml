@@ -34,8 +34,8 @@
                                 <StackLayout Orientation="Vertical" Spacing="10">
                                     <Label Text="{Binding Name}" FontSize="Medium" FontAttributes="Bold" TextColor="Black" Margin="0,0,0,-10"/>
                                     <StackLayout Orientation="Horizontal" Spacing="10">
-                                        <Label Text="{Binding StartDate, StringFormat='Start: {0:MM/dd/yyyy}'}" FontSize="Small" TextColor="Black"/>
-                                        <Label Text="{Binding EndDate, StringFormat='End: {0:MM/dd/yyyy}'}" FontSize="Small" TextColor="Black"/>
+                                        <Label Text="{Binding StartDate, StringFormat='{0:MM/dd/yyyy}'}" FontSize="Small" TextColor="Black"/>
+                                        <Label Text="{Binding EndDate, StringFormat='-  {0:MM/dd/yyyy}'}" FontSize="Small" TextColor="Black"/>
                                     </StackLayout>
                                 </StackLayout>
                             </ContentView>

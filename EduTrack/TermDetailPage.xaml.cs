@@ -18,7 +18,7 @@ namespace EduTrack
         public TermDetailPage(Term term)
         {
             InitializeComponent();
-
+            
             //assigns the contructor parameter 'term' to the class variable "_term",
             //which is necessary if you want the term class, _term, to be accessible 
             //to other methods outside of the constructor scope.
@@ -27,6 +27,7 @@ namespace EduTrack
 
             string dbPath = AppConfig.DbPath;
             _dbInteractions = new DB_Interactions(dbPath);
+            existingTerms = new List<Term>();  // implemented 11/11/2024 4:41pm to remove a warning.
 
             if (_term != null)
             {

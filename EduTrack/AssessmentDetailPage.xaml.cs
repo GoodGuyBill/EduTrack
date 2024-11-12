@@ -1,11 +1,11 @@
-using Microsoft.Maui.Controls;
+//using Microsoft.Maui.Controls;
 using Plugin.LocalNotification;
-using System;
+//using System;
 using System.Diagnostics;
-using System.Linq;
+//using System.Linq;
 using EduTrack.DB_Models;
-using System.Collections.ObjectModel;
-using System.Xml.Linq;
+//using System.Collections.ObjectModel;
+//using System.Xml.Linq;
 //using HealthKit;
 
 namespace EduTrack
@@ -123,25 +123,25 @@ namespace EduTrack
         {
             if (string.IsNullOrWhiteSpace(AssessmentNameInput.Text))
             {
-                DisplayAlert("Validation Error", "An assessment name is required. Please enter an assessment name.", "OK");
+                await DisplayAlert("Validation Error", "An assessment name is required. Please enter an assessment name.", "OK");
                 return false;
             }
 
             if (AssessmentStartDatePicker.Date == default || AssessmentEndDatePicker.Date == default)
             {
-                DisplayAlert("Validation Error", "Please select a valid start and end date.", "OK");
+                await DisplayAlert("Validation Error", "Please select a valid start and end date.", "OK");
                 return false;
             }
 
             if (AssessmentStartDatePicker.Date >= AssessmentEndDatePicker.Date)
             {
-                DisplayAlert("Validation Error", "Invalid start date. The start date must be BEFORE the end date.", "OK");
+                await DisplayAlert("Validation Error", "Invalid start date. The start date must be BEFORE the end date.", "OK");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(AssessmentTypePicker.SelectedItem?.ToString()))
             {
-                DisplayAlert("Validation Error", "An assessment type is required. Please enter an assessment type.", "OK");
+                await DisplayAlert("Validation Error", "An assessment type is required. Please enter an assessment type.", "OK");
                 return false;
             }
 

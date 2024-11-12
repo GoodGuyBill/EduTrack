@@ -3,7 +3,7 @@
 //using Microsoft.Maui.Controls;
 //using Microsoft.Maui;
 using EduTrack.DB_Models;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.Collections.ObjectModel;
 namespace EduTrack
 {

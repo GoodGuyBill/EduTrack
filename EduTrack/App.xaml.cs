@@ -27,10 +27,10 @@ namespace EduTrack
             LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;  // Handle notification action tapped
         }
 
-        private async Task InitializeApp(string dbPath)  // not needed be remains to work on later.
+        private async Task InitializeApp(string dbPath)  
         {            
             var dbInteractions = new DB_Interactions(dbPath);
-            await LoadSampleData(dbInteractions);              // I could never get this to work!
+            await LoadSampleData(dbInteractions);              
         }
 
 
@@ -102,19 +102,3 @@ namespace EduTrack
         }
     }
 }
-
-
-
-
-//namespace EduTrack
-//{
-//    public partial class App : Application
-//    {
-//        public App()
-//        {
-//            InitializeComponent();
-
-//            MainPage = new TermListPage();
-//        }
-//    }
-//}

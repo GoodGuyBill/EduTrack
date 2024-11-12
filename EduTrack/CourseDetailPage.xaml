@@ -8,7 +8,7 @@
         <ScrollView>
             <StackLayout Padding="10" Margin="10,-15,0,0">
                 <!-- Screen Title -->
-                <Label Text="Course Detail" FontSize="Large" Margin="0,0,0,10" HorizontalOptions="Center" />
+                <Label Text="Course Detail View/Edit" FontSize="Large" Margin="0,0,0,10" HorizontalOptions="Center" />
 
                 <!--Section Identifier: BASIC COURSE INFO section-->
                 <Label Text="Basic Course Information" VerticalOptions="Center" FontSize="Medium" Margin="0,0,0,0" TextDecorations="Underline"/>
